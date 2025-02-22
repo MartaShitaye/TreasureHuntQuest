@@ -17,6 +17,20 @@
       color: #fff;
       overflow: hidden;
     }
+    /* Skip Button (Fixed in Top Right) */
+    #skipBtn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 10000;
+      padding: 5px 10px;
+      font-size: 14px;
+      background: #f00;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
     /* Container for Content Sections */
     #container {
       position: relative;
@@ -73,6 +87,9 @@
       button {
         font-size: 16px;
       }
+      .binary-text {
+        font-size: 14px;
+      }
     }
     .binary-text {
       white-space: pre-wrap;
@@ -85,7 +102,12 @@
       border: 1px solid #0F0;
       border-radius: 5px;
     }
-    /* Style for the embedded video section */
+    /* Style the first line (title) to be bold and larger */
+    .binary-text::first-line {
+      font-weight: bold;
+      font-size: 20px;
+    }
+    /* (Optional) Section 8: Embedded YouTube Video remains as backup */
     #videoSection iframe {
       width: 90%;
       max-width: 560px;
@@ -95,6 +117,9 @@
   </style>
 </head>
 <body>
+  <!-- Skip Button -->
+  <button id="skipBtn">Skip</button>
+  
   <!-- Canvas for Falling Binary Code -->
   <canvas id="matrix"></canvas>
   
@@ -144,7 +169,7 @@
       <a href="https://www.instagram.com/nsbe_cbu" target="_blank" style="color: #0F0; font-size: 20px;">RSVP on Instagram</a>
     </div>
     
-    <!-- Section 8: Embedded YouTube Video (for "No" response) -->
+    <!-- Section 8: (Embedded YouTube video as backup) -->
     <div id="section8" class="section" style="display:none;">
       <p>Maybe next time... Enjoy this video:</p>
       <div id="videoSection">
@@ -199,7 +224,6 @@
     // ------------------------------
     // Binary-to-Text Decoding Effect
     // ------------------------------
-    // Utility: Convert text to binary representation
     function toBinary(text) {
       return text.split('').map(c => {
         if (c === "\n") return "\n";
@@ -208,7 +232,6 @@
       }).join(' ');
     }
     
-    // Function to gradually decode binary to clear text
     function decodeText(element, finalText, speed, callback) {
       let binaryArray = finalText.split('').map(c => {
         if (c === "\n") return "\n";
@@ -249,9 +272,11 @@
     // Define Final Text for Each Section
     // ------------------------------
     const rulesFinalText = "RULES:\n" +
-      "1. Explore the clues hidden in binary puzzles.\n" +
-      "2. Decipher the puzzles to reveal secrets.\n" +
-      "3. Follow each clue to progress through the hunt.";
+      "1. Decipher the puzzles to reveal secrets.\n" +
+      "2. Follow each clue to progress through the hunt.\n" +
+      "3. A maximum of 3 participants per team; teams of 1 are also accepted.\n" +
+      "4. No use of the internet.\n" +
+      "5. You may utilize up to 3 hints for the entire game.";
     
     const prizesFinalText = "PRIZES:\n" +
       "1st - $25 Visa Gift Card\n" +
@@ -276,25 +301,21 @@
     // ------------------------------
     // Sequential Section Reveal Logic
     // ------------------------------
-    
-    // When "Start the Hunt" is clicked, hide welcome and start sections, show rules section
     document.getElementById("startHuntBtn").addEventListener("click", function() {
       document.getElementById("section1").style.display = "none";
       document.getElementById("section2").style.display = "none";
       document.getElementById("section3").style.display = "block";
     });
     
-    // Reveal the Rules by decoding the binary text, then show the Prizes section
     document.getElementById("revealRulesBtn").addEventListener("click", function() {
       decodeText(rulesTextElement, rulesFinalText, 50, function() {
         setTimeout(function() {
           document.getElementById("section4").style.display = "block";
         }, 1000);
       });
-      this.style.display = "none"; // Hide this button once clicked
+      this.style.display = "none";
     });
     
-    // Reveal the Prizes by decoding the binary text, then show the Event Info section
     document.getElementById("revealPrizesBtn").addEventListener("click", function() {
       decodeText(prizesTextElement, prizesFinalText, 50, function() {
         setTimeout(function() {
@@ -304,7 +325,6 @@
       this.style.display = "none";
     });
     
-    // Reveal the Event Info by decoding the binary text, then show the Dare Prompt section
     document.getElementById("revealEventBtn").addEventListener("click", function() {
       decodeText(eventInfoTextElement, eventFinalText, 50, function() {
         setTimeout(function() {
@@ -314,13 +334,74 @@
       this.style.display = "none";
     });
     
-    // Dare prompt: If "No" is clicked, show the embedded video; if "Yes", show RSVP info
-    document.getElementById("noBtn").addEventListener("click", function() {
-      document.getElementById("section6").style.display = "none";
-      document.getElementById("section7").style.display = "none";
-      document.getElementById("section8").style.display = "block";
+    // Skip button: Immediately reveal all final text and show all sections (3,4,5,6)
+    document.getElementById("skipBtn").addEventListener("click", function() {
+      // Immediately set final text
+      rulesTextElement.innerText = rulesFinalText;
+      prizesTextElement.innerText = prizesFinalText;
+      eventInfoTextElement.innerText = eventFinalText;
+      
+      // Hide any reveal buttons
+      document.getElementById("revealRulesBtn").style.display = "none";
+      document.getElementById("revealPrizesBtn").style.display = "none";
+      document.getElementById("revealEventBtn").style.display = "none";
+      
+      // Show all sections
+      document.getElementById("section3").style.display = "block";
+      document.getElementById("section4").style.display = "block";
+      document.getElementById("section5").style.display = "block";
+      document.getElementById("section6").style.display = "block";
     });
     
+    // Dare prompt: If "No" is clicked, hide the container and show a full-screen local video with an extra overlay.
+    document.getElementById("noBtn").addEventListener("click", function() {
+      document.getElementById("container").style.display = "none";
+      
+      // Create a full-screen video overlay
+      var videoOverlay = document.createElement("div");
+      videoOverlay.id = "fullScreenVideo";
+      videoOverlay.style.position = "fixed";
+      videoOverlay.style.top = "0";
+      videoOverlay.style.left = "0";
+      videoOverlay.style.width = "100%";
+      videoOverlay.style.height = "100%";
+      videoOverlay.style.background = "black";
+      videoOverlay.style.zIndex = "9999";
+      
+      // Create the video element using the local file "RickRolled.MOV"
+      var videoElement = document.createElement("video");
+      videoElement.src = "RickRolled.MOV"; // Ensure this file is in your repository or adjust the path
+      videoElement.autoplay = true;
+      videoElement.loop = true;
+      videoElement.muted = false; // Audio enabled
+      videoElement.style.width = "100%";
+      videoElement.style.height = "100%";
+      videoElement.style.objectFit = "cover";
+      
+      // Create an extra overlay layer for the additional rickroll effect
+      var extraOverlay = document.createElement("div");
+      extraOverlay.style.position = "absolute";
+      extraOverlay.style.top = "0";
+      extraOverlay.style.left = "0";
+      extraOverlay.style.width = "100%";
+      extraOverlay.style.height = "100%";
+      extraOverlay.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+      extraOverlay.style.display = "flex";
+      extraOverlay.style.alignItems = "center";
+      extraOverlay.style.justifyContent = "center";
+      
+      var overlayText = document.createElement("h1");
+      overlayText.textContent = "Rick Rolled!";
+      overlayText.style.color = "#fff";
+      overlayText.style.fontSize = "3rem";
+      
+      extraOverlay.appendChild(overlayText);
+      videoOverlay.appendChild(videoElement);
+      videoOverlay.appendChild(extraOverlay);
+      document.body.appendChild(videoOverlay);
+    });
+    
+    // If "Yes" is clicked, show the RSVP/Instagram info section.
     document.getElementById("yesBtn").addEventListener("click", function() {
       document.getElementById("section7").style.display = "block";
     });
