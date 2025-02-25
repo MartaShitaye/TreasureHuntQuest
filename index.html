@@ -141,10 +141,10 @@
     <!-- Section 3: Rules in Binary with Reveal Button -->
     <div id="section3" class="section" style="display:none;">
       <div id="section1" class="section">
-        <h1>scroll down to decode!</h1></div>
+        <h1>scroll down to decode!</h1>
+      </div>
       <div id="rulesText" class="binary-text"></div>
       <button id="revealRulesBtn">Reveal Rules</button>
-  
     </div>
     
     <!-- Section 4: Prizes in Binary with Reveal Button -->
@@ -166,10 +166,16 @@
       <button id="noBtn">No</button>
     </div>
     
-    <!-- Section 7: RSVP / Instagram Link -->
+    <!-- Section 7: RSVP / Google Form and Instagram Links -->
     <div id="section7" class="section" style="display:none;">
-      <p>Then you can RSVP on our Instagram or just show up at the location.</p>
-      <a href="https://www.instagram.com/nsbe_cbu" target="_blank" style="color: #0F0; font-size: 20px;">RSVP on Instagram</a>
+      <p>Thank you for choosing to join us! Please RSVP by filling out our form below and follow us on Instagram for updates.</p>
+      <p> No need to RSVP to Play! just show up on Time!</p>
+      <p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSejqIMeF-SRdg2chiQf0leXXPP3VYCw8Q-jGpvlpgkt4MKfZw/viewform?usp=header" target="_blank" style="color: #0F0; font-size: 20px;">RSVP Form</a>
+      </p>
+      <p>
+        <a href="https://www.instagram.com/nsbe_cbu" target="_blank" style="color: #0F0; font-size: 20px;">Follow us on Instagram</a>
+      </p>
     </div>
     
     <!-- Section 8: (Embedded YouTube video as backup) -->
@@ -404,7 +410,7 @@
       document.body.appendChild(videoOverlay);
     });
     
-    // If "Yes" is clicked, show the RSVP/Instagram info section.
+    // If "Yes" is clicked, show the RSVP/Google Form and Instagram info section.
     document.getElementById("yesBtn").addEventListener("click", function() {
       document.getElementById("section7").style.display = "block";
     });
